@@ -14,6 +14,8 @@ tables:
     request:
       method: GET
       path: /packages/{{filter.name}}/recent
+    response:
+      allow_404_empty: true
     columns:
       - name: name
         type: Utf8
