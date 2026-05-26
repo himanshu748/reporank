@@ -84,7 +84,7 @@ reporank/
 ├── agent/
 │   └── orchestrator.py      Core Coral query + AI analysis pipeline
 ├── coral_client.py          Thin wrapper around Coral CLI (with automatic rate-limit retries)
-├── claude_client.py         Hugging Face API client for impact narrative
+├── hf_client.py             Hugging Face API client for Qwen impact narrative
 ├── sources/
 │   ├── hackernews.yaml      Custom HackerNews spec (bounty submission)
 │   ├── npm.yaml             Custom npm spec (bounty submission)
