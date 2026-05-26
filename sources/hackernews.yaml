@@ -1,0 +1,46 @@
+dsl_version: 3
+name: hackernews
+version: "1.0.0"
+description: HackerNews search API on Algolia.
+backend: http
+base_url: https://hn.algolia.com/api/v1
+
+tables:
+  - name: stories
+    description: HN stories search.
+    filters:
+      - name: query
+        required: true
+    request:
+      method: GET
+      path: /search
+      query:
+        - name: query
+          from: filter
+          key: query
+        - name: tags
+          from: template
+          template: story
+    response:
+      rows_path: ["hits"]
+    columns:
+      - name: query
+        type: Utf8
+        expr:
+          kind: from_filter
+          key: query
+      - name: title
+        type: Utf8
+      - name: score
+        type: Int64
+        expr:
+          kind: path
+          path: ["points"]
+      - name: time
+        type: Timestamp
+        expr:
+          kind: format_timestamp
+          input: seconds
+          expr:
+            kind: path
+            path: ["created_at_i"]

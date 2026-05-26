@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html class="dark" lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>RepoRank Dashboard | Impact &amp; Funding Readiness</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.cdnfonts.com/css/geist" rel="stylesheet"/>
+    <style>
+        @keyframes pulse-glow {
+            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(127, 255, 110, 0.4); }
+            70% { transform: scale(1.2); box-shadow: 0 0 0 10px rgba(127, 255, 110, 0); }
+            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(127, 255, 110, 0); }
+        }
+        .logo-dot {
+            animation: pulse-glow 2s infinite ease-in-out;
+        }
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        .glass-panel-elevated {
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(24px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+        .primary-glow:hover {
+            box-shadow: 0 0 15px rgba(127, 255, 110, 0.3);
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #0a0a0f;
+            color: #e4e1e9;
+            overflow-x: hidden;
+        }
+        .reveal-anim {
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .reveal-anim.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        #score-ring {
+            transition: stroke-dashoffset 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .stats-grid-item {
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+        .stats-grid-item:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.08);
+        }
+    </style>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "tertiary-container": "#ffd9e4",
+                    "on-secondary-container": "#00555f",
+                    "tertiary": "#ffffff",
+                    "surface-bright": "#39383e",
+                    "on-tertiary-fixed": "#3e0020",
+                    "outline": "#879581",
+                    "primary": "#ffffff",
+                    "secondary-container": "#00d1e8",
+                    "surface": "#131318",
+                    "surface-container": "#1f1f25",
+                    "surface-dim": "#131318",
+                    "inverse-surface": "#e4e1e9",
+                    "on-primary-container": "#007508",
+                    "on-tertiary-container": "#b2316e",
+                    "on-background": "#e4e1e9",
+                    "error": "#ffb4ab",
+                    "primary-fixed-dim": "#61e054",
+                    "inverse-on-surface": "#303036",
+                    "on-primary-fixed": "#002201",
+                    "surface-container-lowest": "#0e0e13",
+                    "on-tertiary-fixed-variant": "#8b0a4f",
+                    "surface-variant": "#35343a",
+                    "on-tertiary": "#640037",
+                    "on-surface": "#e4e1e9",
+                    "primary-container": "#7efe6d",
+                    "on-secondary-fixed": "#001f24",
+                    "surface-container-highest": "#35343a",
+                    "on-secondary-fixed-variant": "#004f58",
+                    "error-container": "#93000a",
+                    "surface-container-high": "#2a292f",
+                    "on-surface-variant": "#bdcbb5",
+                    "background": "#131318",
+                    "tertiary-fixed-dim": "#ffb0cb",
+                    "on-primary-fixed-variant": "#005304",
+                    "primary-fixed": "#7efe6d",
+                    "secondary-fixed-dim": "#1fdaf1",
+                    "tertiary-fixed": "#ffd9e4",
+                    "on-secondary": "#00363d",
+                    "surface-container-low": "#1b1b20",
+                    "secondary-fixed": "#99f0ff",
+                    "secondary": "#6cebff",
+                    "on-primary": "#003a02",
+                    "outline-variant": "#3e4a39",
+                    "surface-tint": "#61e054",
+                    "on-error": "#690005",
+                    "inverse-primary": "#006e07",
+                    "on-error-container": "#ffdad6"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-mobile": "16px",
+                    "container-max": "1440px",
+                    "margin-desktop": "40px",
+                    "gutter": "24px",
+                    "unit": "4px"
+            },
+            "fontFamily": {
+                    "display-lg-mobile": ["Geist"],
+                    "label-caps": ["JetBrains Mono"],
+                    "display-lg": ["Geist"],
+                    "body-md": ["Geist"],
+                    "code-sm": ["JetBrains Mono"],
+                    "headline-md": ["Geist"]
+            },
+            "fontSize": {
+                    "display-lg-mobile": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "label-caps": ["12px", {"lineHeight": "1.0", "letterSpacing": "0.1em", "fontWeight": "600"}],
+                    "display-lg": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.04em", "fontWeight": "700"}],
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "code-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+</head>
+<body class="min-h-screen flex flex-col font-body-md text-on-surface">
+<!-- TopNavBar -->
+<header class="fixed top-0 w-full z-50 flex justify-between items-center px-margin-desktop py-4 max-w-container-max mx-auto bg-surface/30 dark:bg-surface/30 backdrop-blur-xl border-b border-white/10">
+<div class="flex items-center gap-2 font-display-lg text-[24px] text-primary dark:text-primary">
+            RepoRank
+            <span class="logo-dot w-2 h-2 bg-primary-fixed rounded-full"></span>
+</div>
+<nav class="hidden md:flex items-center gap-8">
+<a class="font-body-md text-primary dark:text-primary border-b-2 border-primary-fixed pb-1" href="#">Explorer</a>
+<a class="font-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors" href="#">Leaderboard</a>
+<a class="font-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors" href="#">Ecosystems</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="bg-primary-fixed text-on-primary-fixed px-6 py-2 rounded-full font-label-caps text-label-caps transition-all duration-300 hover:scale-105 active:scale-95 primary-glow">
+                Connect GitHub
+            </button>
+</div>
+</header>
+<main class="flex-grow pt-32 pb-20 px-margin-mobile md:px-margin-desktop max-w-[1000px] mx-auto w-full">
+<!-- Hero Section -->
+<section class="text-center mb-16">
+<h1 class="font-display-lg text-display-lg md:text-display-lg mb-4 text-white">Impact &amp; Funding Readiness</h1>
+<p class="font-body-md text-on-surface-variant max-w-2xl mx-auto">Discover the real-world impact of any open-source repository using our advanced coral-graph analysis.</p>
+</section>
+<!-- Input Card -->
+<div class="glass-panel p-2 rounded-xl mb-12 shadow-2xl">
+<div class="flex flex-col md:flex-row gap-2">
+<div class="flex-grow flex items-center px-4 py-2">
+<span class="material-symbols-outlined text-on-surface-variant mr-3">search</span>
+<input class="bg-transparent border-none focus:ring-0 text-white w-full font-code-sm placeholder:text-on-surface-variant/40" id="repo-input" placeholder="owner/repo (e.g. tiangolo/fastapi)" type="text" value="tiangolo/fastapi"/>
+</div>
+<div class="md:w-px bg-white/10 h-8 self-center hidden md:block"></div>
+<select class="bg-transparent border-none focus:ring-0 text-on-surface-variant font-label-caps text-label-caps py-2 px-4 cursor-pointer" id="ecosystem-select">
+<option value="python">Python / PyPI</option>
+<option value="npm">JavaScript / npm</option>
+<option value="other">Other</option>
+</select>
+<button class="bg-primary-fixed text-on-primary-fixed px-8 py-3 rounded-lg font-label-caps text-label-caps primary-glow transition-all flex items-center justify-center gap-2" id="analyze-btn" onclick="analyze()">
+                    Analyze <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Results Area -->
+<div class="relative min-h-[400px]" id="results-container">
+<!-- Placeholder State -->
+<div class="flex flex-col items-center justify-center py-20 text-on-surface-variant/30" id="waiting-state">
+<span class="material-symbols-outlined text-[64px] mb-4">analytics</span>
+<p class="font-label-caps">Waiting for input...</p>
+</div>
+<!-- Loading State (Hidden) -->
+<div class="hidden flex flex-col items-center justify-center py-20" id="loading-state">
+<div class="w-12 h-12 border-4 border-primary-fixed/20 border-t-primary-fixed rounded-full animate-spin mb-4"></div>
+<p class="font-label-caps text-primary-fixed animate-pulse">Analyzing Repository Data...</p>
+</div>
+<!-- Impact Card (Hidden by Default) -->
+<div class="hidden reveal-anim space-y-8" id="impact-card">
+<div class="glass-panel p-8 rounded-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 w-64 h-64 bg-primary-fixed/5 rounded-full blur-3xl -mr-32 -mt-32"></div>
+<div class="flex flex-col md:flex-row justify-between items-start gap-8 relative z-10">
+<div class="space-y-6 flex-grow">
+<div class="flex items-center gap-4">
+<span id="verdict-badge" class="bg-primary-fixed/10 text-primary-fixed px-4 py-1 rounded-full text-label-caps font-label-caps border border-primary-fixed/20 shadow-[0_0_15px_rgba(127,255,110,0.2)]">Thriving</span>
+<h2 class="font-headline-md text-headline-md text-white" id="result-repo-name">tiangolo / fastapi</h2>
+</div>
+<p class="text-on-surface-variant font-body-md leading-relaxed" id="result-repo-desc"></p>
+<p class="text-on-surface-variant font-body-md leading-relaxed" id="result-narrative"></p>
+<div class="flex flex-wrap gap-2" id="result-grants-container">
+</div>
+</div>
+<div class="relative w-32 h-32 flex items-center justify-center shrink-0">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-white/5" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary-fixed" cx="64" cy="64" fill="transparent" id="score-ring" r="58" stroke="currentColor" stroke-dasharray="364.4" stroke-dashoffset="364.4" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-3xl font-bold text-white" id="result-score-num">95</span>
+<span class="text-[10px] font-label-caps opacity-50">SCORE</span>
+</div>
+</div>
+</div>
+<!-- Stats Grid -->
+<div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-12">
+<div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
+<span class="material-symbols-outlined text-primary-fixed">star</span>
+<div>
+<p class="text-[20px] font-bold text-white" id="stat-stars">0</p>
+<p class="text-[10px] font-label-caps text-on-surface-variant">GitHub Stars</p>
+</div>
+</div>
+<div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
+<span class="material-symbols-outlined text-secondary">fork_right</span>
+<div>
+<p class="text-[20px] font-bold text-white" id="stat-forks">0</p>
+<p class="text-[10px] font-label-caps text-on-surface-variant">Forks</p>
+</div>
+</div>
+<div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
+<span class="material-symbols-outlined text-tertiary-fixed-dim">download</span>
+<div>
+<p class="text-[20px] font-bold text-white" id="stat-downloads">0</p>
+<p class="text-[10px] font-label-caps text-on-surface-variant">Monthly DLs</p>
+</div>
+</div>
+<div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
+<span class="material-symbols-outlined text-secondary">forum</span>
+<div>
+<p class="text-[20px] font-bold text-white" id="stat-hn">0</p>
+<p class="text-[10px] font-label-caps text-on-surface-variant">HN Mentions (6mo)</p>
+</div>
+</div>
+<div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
+<span class="material-symbols-outlined text-primary-fixed">payments</span>
+<div>
+<p class="text-[20px] font-bold text-white" id="stat-funding">$0</p>
+<p class="text-[10px] font-label-caps text-on-surface-variant">OC Raised</p>
+</div>
+</div>
+<div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
+<span class="material-symbols-outlined text-error">error</span>
+<div>
+<p class="text-[20px] font-bold text-white" id="stat-issues">0</p>
+<p class="text-[10px] font-label-caps text-on-surface-variant">Open Issues</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Funding Pitch & Grid -->
+<div class="grid md:grid-cols-2 gap-8">
+<div class="glass-panel p-6 rounded-xl border-primary-fixed/20 group">
+<div class="flex justify-between items-center mb-4">
+<h3 class="font-label-caps text-primary-fixed uppercase tracking-widest text-[11px]">Funding Pitch</h3>
+<button class="text-on-surface-variant hover:text-white transition-colors" onclick="copyPitch()">
+<span class="material-symbols-outlined text-[18px]">content_copy</span>
+</button>
+</div>
+<p class="font-body-md text-on-surface-variant italic leading-relaxed" id="funding-pitch-text">
+                            ""
+                        </p>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="glass-panel p-6 rounded-xl">
+<h4 class="font-label-caps text-secondary mb-4 text-[11px]">Strengths</h4>
+<ul class="text-on-surface-variant space-y-2 text-[13px]" id="result-strengths">
+</ul>
+</div>
+<div class="glass-panel p-6 rounded-xl">
+<h4 class="font-label-caps text-tertiary-fixed-dim mb-4 text-[11px]">Gaps</h4>
+<ul class="text-on-surface-variant space-y-2 text-[13px]" id="result-gaps">
+</ul>
+</div>
+</div>
+</div>
+<!-- Coral SQL -->
+<details class="glass-panel rounded-xl group transition-all duration-300">
+<summary class="p-6 cursor-pointer flex justify-between items-center font-label-caps text-on-surface-variant hover:text-white select-none text-[12px]">
+                        View Data Query (Coral SQL)
+                        <span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+</summary>
+<div class="px-6 pb-6 pt-0">
+<div class="bg-surface-container-lowest/50 p-4 rounded-lg border border-white/5">
+<pre class="font-code-sm text-secondary-fixed text-[12px] overflow-x-auto"><code id="result-sql"></code></pre>
+</div>
+</div>
+</details>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="w-full py-8 px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-gutter bg-surface-container-lowest/50 dark:bg-surface-container-lowest/50 backdrop-blur-md border-t border-white/5">
+<div class="font-display-lg text-[20px] text-primary">RepoRank</div>
+<div class="flex flex-col items-center gap-4">
+<p class="font-body-md text-on-surface-variant/60 text-center md:text-left">
+                Built with Coral · WeMakeDevs Pirates of the Coral-bean · Powered by Qwen2.5-72B
+            </p>
+<div class="flex gap-6 font-label-caps text-label-caps">
+<a class="text-on-surface-variant/60 hover:text-on-surface transition-colors" href="#">Documentation</a>
+<a class="text-on-surface-variant/60 hover:text-on-surface transition-colors" href="#">API</a>
+<a class="text-on-surface-variant/60 hover:text-on-surface transition-colors" href="#">Terms</a>
+<a class="text-on-surface-variant/60 hover:text-on-surface transition-colors" href="#">Privacy</a>
+</div>
+</div>
+</footer>
+<script>
+        function verdictClass(v) {
+            const map = {
+                'thriving':       'bg-primary-fixed/10 text-primary-fixed border-primary-fixed/20 shadow-[0_0_15px_rgba(127, 255, 110, 0.2)]',
+                'growing':        'bg-secondary/10 text-secondary border-secondary/20 shadow-[0_0_15px_rgba(108, 235, 255, 0.2)]',
+                'promising':      'bg-tertiary-fixed-dim/10 text-tertiary-fixed-dim border-tertiary-fixed-dim/20 shadow-[0_0_15px_rgba(255, 176, 203, 0.15)]',
+                'hidden gem':     'bg-white/10 text-white border-white/20',
+                'needs attention': 'bg-error/10 text-error border-error/20 shadow-[0_0_15px_rgba(255, 180, 171, 0.2)]'
+            };
+            return map[(v||'').toLowerCase()] || 'bg-white/10 text-white border-white/20';
+        }
+
+        function fmt(n) {
+            if (!n && n !== 0) return '—';
+            if (n >= 1000000) return (n/1000000).toFixed(1)+'M';
+            if (n >= 1000)     return (n/1000).toFixed(1)+'k';
+            return String(n);
+        }
+
+        function buildSql(repo, eco) {
+            const parts = repo.split('/');
+            const owner = parts[0] || '';
+            const pkg_name = parts[1] || '';
+            const pkg_table = eco === 'python' ? 'pypi.packages' : 'npm.packages';
+            const dl_col    = eco === 'python' ? 'last_month_downloads' : 'monthly_downloads';
+
+            return `SELECT  g.full_name,
+        g.stargazers_count,
+        g.forks_count,
+        g.open_issues_count,
+        p.${dl_col}         AS monthly_downloads,
+        h.mention_count    AS hn_mentions_6mo,
+        h.top_score        AS hn_top_score
+FROM    github.repos_get    g
+JOIN    ${pkg_table}         p  ON  p.name = '${pkg_name}'
+JOIN    (
+            SELECT COUNT(*) AS mention_count, MAX(score) AS top_score
+            FROM   hackernews.stories
+            WHERE  query = '${pkg_name}'
+              AND  time  > NOW() - INTERVAL '180 days'
+        )                   h  ON  1 = 1
+WHERE   g.owner = '${owner}' AND g.repo = '${pkg_name}'`;
+        }
+
+        async function analyze() {
+            const input = document.getElementById('repo-input');
+            const ecoSelect = document.getElementById('ecosystem-select');
+            const repo = input.value.trim();
+            const ecosystem = ecoSelect.value;
+
+            if (!repo || !repo.includes('/')) {
+                input.parentElement.classList.add('border-b', 'border-error');
+                setTimeout(() => input.parentElement.classList.remove('border-b', 'border-error'), 2000);
+                return;
+            }
+
+            const waitState = document.getElementById('waiting-state');
+            const loadState = document.getElementById('loading-state');
+            const impactCard = document.getElementById('impact-card');
+            const analyzeBtn = document.getElementById('analyze-btn');
+            const scoreRing = document.getElementById('score-ring');
+
+            // Phase 1: Loading
+            analyzeBtn.disabled = true;
+            analyzeBtn.innerHTML = `<div class="w-4 h-4 border-2 border-on-primary-fixed/20 border-t-on-primary-fixed rounded-full animate-spin"></div> Analyzing`;
+            waitState.classList.add('hidden');
+            impactCard.classList.add('hidden');
+            impactCard.classList.remove('active');
+            loadState.classList.remove('hidden');
+
+            try {
+                const resp = await fetch('/analyze', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ repo, ecosystem }),
+                });
+
+                const data = await resp.json();
+
+                if (!resp.ok) {
+                    alert(data.detail || 'Analysis failed');
+                    loadState.classList.add('hidden');
+                    waitState.classList.remove('hidden');
+                    analyzeBtn.disabled = false;
+                    analyzeBtn.innerHTML = `Analyze <span class="material-symbols-outlined text-[18px]">arrow_forward</span>`;
+                    return;
+                }
+
+                const g  = data.raw_signals?.github          || {};
+                const p  = data.raw_signals?.package_registry || {};
+                const hn = data.raw_signals?.community_buzz   || {};
+                const oc = data.raw_signals?.funding           || {};
+                const a  = data.analysis                       || {};
+
+                const score   = a.impact_score ?? 0;
+                const verdict = a.verdict      ?? 'Promising';
+                const grants  = a.top_grants   || [];
+                const strengths = a.strengths  || [];
+                const gaps      = a.gaps       || [];
+
+                // Map UI fields
+                document.getElementById('result-repo-name').textContent = data.repo;
+                document.getElementById('result-repo-desc').textContent = g.description || a.narrative?.split('.')[0] || '';
+                document.getElementById('result-narrative').textContent = a.narrative || '';
+                
+                // Verdict Badge
+                const badge = document.getElementById('verdict-badge');
+                badge.textContent = verdict;
+                badge.className = `px-4 py-1 rounded-full text-label-caps font-label-caps border ${verdictClass(verdict)}`;
+
+                // Score Number
+                document.getElementById('result-score-num').textContent = score;
+
+                // Score Ring Color
+                if (score >= 70) {
+                    scoreRing.className.baseVal = 'text-primary-fixed';
+                } else if (score >= 40) {
+                    scoreRing.className.baseVal = 'text-secondary';
+                } else {
+                    scoreRing.className.baseVal = 'text-error';
+                }
+
+                // Grants
+                const grantsContainer = document.getElementById('result-grants-container');
+                grantsContainer.innerHTML = '';
+                if (grants.length) {
+                    grants.forEach(grant => {
+                        const span = document.createElement('span');
+                        span.className = 'bg-white/5 px-3 py-1 rounded text-[11px] font-label-caps text-secondary border border-white/5';
+                        span.textContent = grant;
+                        grantsContainer.appendChild(span);
+                    });
+                    grantsContainer.classList.remove('hidden');
+                } else {
+                    grantsContainer.classList.add('hidden');
+                }
+
+                // Stats
+                document.getElementById('stat-stars').textContent = fmt(g.stargazers_count);
+                document.getElementById('stat-forks').textContent = fmt(g.forks_count);
+                document.getElementById('stat-downloads').textContent = fmt(p.last_month_downloads ?? p.monthly_downloads);
+                document.getElementById('stat-hn').textContent = fmt(hn.mention_count);
+                document.getElementById('stat-funding').textContent = oc.total_amount_received ? '$' + fmt(oc.total_amount_received) : '$0';
+                document.getElementById('stat-issues').textContent = fmt(g.open_issues_count);
+
+                // Pitch
+                document.getElementById('funding-pitch-text').textContent = `"${a.funding_pitch || ''}"`;
+
+                // Strengths & Gaps
+                const strengthsUl = document.getElementById('result-strengths');
+                strengthsUl.innerHTML = '';
+                strengths.forEach(s => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-start gap-2';
+                    li.innerHTML = `<span class="text-primary-fixed">•</span> ${s}`;
+                    strengthsUl.appendChild(li);
+                });
+
+                const gapsUl = document.getElementById('result-gaps');
+                gapsUl.innerHTML = '';
+                gaps.forEach(g => {
+                    const li = document.createElement('li');
+                    li.className = 'flex items-start gap-2';
+                    li.innerHTML = `<span class="text-error">•</span> ${g}`;
+                    gapsUl.appendChild(li);
+                });
+
+                // SQL Code
+                document.getElementById('result-sql').textContent = buildSql(data.repo, ecosystem);
+
+                // Reveal UI
+                loadState.classList.add('hidden');
+                impactCard.classList.remove('hidden');
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = `Analyze <span class="material-symbols-outlined text-[18px]">arrow_forward</span>`;
+
+                // Trigger ring and transition animations
+                setTimeout(() => {
+                    impactCard.classList.add('active');
+                    const circumference = 364.4; // 2 * pi * r(58)
+                    const offset = circumference - (score / 100) * circumference;
+                    scoreRing.style.strokeDashoffset = offset;
+                }, 50);
+
+            } catch (err) {
+                alert('Could not reach the server. Is it running?');
+                loadState.classList.add('hidden');
+                waitState.classList.remove('hidden');
+                analyzeBtn.disabled = false;
+                analyzeBtn.innerHTML = `Analyze <span class="material-symbols-outlined text-[18px]">arrow_forward</span>`;
+            }
+        }
+
+        function copyPitch() {
+            const text = document.getElementById('funding-pitch-text').innerText.replace(/^"|"$/g,'');
+            navigator.clipboard.writeText(text).then(() => {
+                const btn = event.currentTarget;
+                const originalIcon = btn.innerHTML;
+                btn.innerHTML = '<span class="material-symbols-outlined text-[18px] text-primary-fixed">check</span>';
+                setTimeout(() => btn.innerHTML = originalIcon, 2000);
+            });
+        }
+
+        // Background Atmospheric Effect
+        document.body.addEventListener('mousemove', (e) => {
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            document.body.style.backgroundImage = `radial-gradient(circle at ${x * 100}% ${y * 100}%, rgba(127, 255, 110, 0.03) 0%, transparent 60%)`;
+        });
+
+        // Enter key support
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('repo-input').addEventListener('keydown', e => {
+                if (e.key === 'Enter') analyze();
+            });
+        });
+    </script>
+</body>
+</html>
