@@ -13,27 +13,50 @@ class RepoRankAgent:
         owner, name = repo.split("/", 1)
 
         # ── 1. GitHub signal ──────────────────────────────────────────────
-        github_data = self._fetch_github(repo)
+        try:
+            github_data = self._fetch_github(repo)
+        except Exception as e:
+            print(f"Error fetching GitHub data: {e}")
+            github_data = {}
 
         # ── 2. Package download signal ────────────────────────────────────
         pkg_data = {}
         if ecosystem == "python":
-            pkg_data = self._fetch_pypi(name)
+            try:
+                pkg_data = self._fetch_pypi(name)
+            except Exception as e:
+                print(f"Error fetching PyPI data: {e}")
+                pkg_data = {}
         elif ecosystem == "npm":
-            pkg_data = self._fetch_npm(name)
+            try:
+                pkg_data = self._fetch_npm(name)
+            except Exception as e:
+                print(f"Error fetching npm data: {e}")
+                pkg_data = {}
 
         # ── 3. HackerNews / community buzz ───────────────────────────────
-        hn_data = self._fetch_hn(name)
+        try:
+            hn_data = self._fetch_hn(name)
+        except Exception as e:
+            print(f"Error fetching HackerNews data: {e}")
+            hn_data = {"mention_count": 0}
 
         # ── 4. Open Collective / funding eligibility ──────────────────────
-        # Try collective with repository name first, fallback to owner name
-        funding_data = self._fetch_opencollective(name)
-        if not funding_data or not funding_data.get("name"):
-            funding_data = self._fetch_opencollective(owner)
+        funding_data = {}
+        try:
+            funding_data = self._fetch_opencollective(name)
+            if not funding_data or not funding_data.get("name"):
+                funding_data = self._fetch_opencollective(owner)
+        except Exception as e:
+            print(f"Error fetching Open Collective data: {e}")
 
         # ── 5. Cross-source summary query ────────────────────────────────
         # This is the "one map for all seas" query Coral shines at.
-        cross_data = self._cross_source_query(repo, name, ecosystem)
+        try:
+            cross_data = self._cross_source_query(repo, name, ecosystem)
+        except Exception as e:
+            print(f"Error running cross-source query: {e}")
+            cross_data = []
 
         # ── 6. Assemble raw signal dict ───────────────────────────────────
         raw = {
