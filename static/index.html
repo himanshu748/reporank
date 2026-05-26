@@ -159,160 +159,219 @@
 <a class="font-body-md text-on-surface-variant dark:text-on-surface-variant hover:text-primary transition-colors" href="#">Ecosystems</a>
 </nav>
 <div class="flex items-center gap-4">
-<button class="bg-primary-fixed text-on-primary-fixed px-6 py-2 rounded-full font-label-caps text-label-caps transition-all duration-300 hover:scale-105 active:scale-95 primary-glow">
+<button class="bg-primary-fixed text-on-primary-fixed px-6 py-2 rounded-full font-label-caps text-label-caps transition-all duration-300 hover:scale-105 active:scale-95 primary-glow" onclick="toggleGithubModal(true)">
                 Connect GitHub
             </button>
 </div>
 </header>
-<main class="flex-grow pt-32 pb-20 px-margin-mobile md:px-margin-desktop max-w-[1000px] mx-auto w-full">
-<!-- Hero Section -->
-<section class="text-center mb-16">
-<h1 class="font-display-lg text-display-lg md:text-display-lg mb-4 text-white">Impact &amp; Funding Readiness</h1>
-<p class="font-body-md text-on-surface-variant max-w-2xl mx-auto">Discover the real-world impact of any open-source repository using our advanced coral-graph analysis.</p>
-</section>
-<!-- Input Card -->
-<div class="glass-panel p-2 rounded-xl mb-12 shadow-2xl">
-<div class="flex flex-col md:flex-row gap-2">
-<div class="flex-grow flex items-center px-4 py-2">
-<span class="material-symbols-outlined text-on-surface-variant mr-3">search</span>
-<input class="bg-transparent border-none focus:ring-0 text-white w-full font-code-sm placeholder:text-on-surface-variant/40" id="repo-input" placeholder="owner/repo (e.g. tiangolo/fastapi)" type="text" value="tiangolo/fastapi"/>
-</div>
-<div class="md:w-px bg-white/10 h-8 self-center hidden md:block"></div>
-<select class="bg-transparent border-none focus:ring-0 text-on-surface-variant font-label-caps text-label-caps py-2 px-4 cursor-pointer" id="ecosystem-select">
-<option value="python">Python / PyPI</option>
-<option value="npm">JavaScript / npm</option>
-<option value="other">Other</option>
-</select>
-<button class="bg-primary-fixed text-on-primary-fixed px-8 py-3 rounded-lg font-label-caps text-label-caps primary-glow transition-all flex items-center justify-center gap-2" id="analyze-btn" onclick="analyze()">
-                    Analyze <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
-</button>
-</div>
-</div>
-<!-- Results Area -->
-<div class="relative min-h-[400px]" id="results-container">
-<!-- Placeholder State -->
-<div class="flex flex-col items-center justify-center py-20 text-on-surface-variant/30" id="waiting-state">
-<span class="material-symbols-outlined text-[64px] mb-4">analytics</span>
-<p class="font-label-caps">Waiting for input...</p>
-</div>
-<!-- Loading State (Hidden) -->
-<div class="hidden flex flex-col items-center justify-center py-20" id="loading-state">
-<div class="w-12 h-12 border-4 border-primary-fixed/20 border-t-primary-fixed rounded-full animate-spin mb-4"></div>
-<p class="font-label-caps text-primary-fixed animate-pulse">Analyzing Repository Data...</p>
-</div>
-<!-- Impact Card (Hidden by Default) -->
-<div class="hidden reveal-anim space-y-8" id="impact-card">
-<div class="glass-panel p-8 rounded-xl relative overflow-hidden">
-<div class="absolute top-0 right-0 w-64 h-64 bg-primary-fixed/5 rounded-full blur-3xl -mr-32 -mt-32"></div>
-<div class="flex flex-col md:flex-row justify-between items-start gap-8 relative z-10">
-<div class="space-y-6 flex-grow">
-<div class="flex items-center gap-4">
-<span id="verdict-badge" class="bg-primary-fixed/10 text-primary-fixed px-4 py-1 rounded-full text-label-caps font-label-caps border border-primary-fixed/20 shadow-[0_0_15px_rgba(127,255,110,0.2)]">Thriving</span>
-<h2 class="font-headline-md text-headline-md text-white" id="result-repo-name">tiangolo / fastapi</h2>
-</div>
-<p class="text-on-surface-variant font-body-md leading-relaxed" id="result-repo-desc"></p>
-<p class="text-on-surface-variant font-body-md leading-relaxed" id="result-narrative"></p>
-<div class="flex flex-wrap gap-2" id="result-grants-container">
-</div>
-</div>
-<div class="relative w-32 h-32 flex items-center justify-center shrink-0">
-<svg class="w-full h-full transform -rotate-90">
-<circle class="text-white/5" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
-<circle class="text-primary-fixed" cx="64" cy="64" fill="transparent" id="score-ring" r="58" stroke="currentColor" stroke-dasharray="364.4" stroke-dashoffset="364.4" stroke-width="8"></circle>
-</svg>
-<div class="absolute inset-0 flex flex-col items-center justify-center">
-<span class="text-3xl font-bold text-white" id="result-score-num">95</span>
-<span class="text-[10px] font-label-caps opacity-50">SCORE</span>
-</div>
-</div>
-</div>
-<!-- Stats Grid -->
-<div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-12">
-<div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
-<span class="material-symbols-outlined text-primary-fixed">star</span>
-<div>
-<p class="text-[20px] font-bold text-white" id="stat-stars">0</p>
-<p class="text-[10px] font-label-caps text-on-surface-variant">GitHub Stars</p>
-</div>
-</div>
-<div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
-<span class="material-symbols-outlined text-secondary">fork_right</span>
-<div>
-<p class="text-[20px] font-bold text-white" id="stat-forks">0</p>
-<p class="text-[10px] font-label-caps text-on-surface-variant">Forks</p>
-</div>
-</div>
-<div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
-<span class="material-symbols-outlined text-tertiary-fixed-dim">download</span>
-<div>
-<p class="text-[20px] font-bold text-white" id="stat-downloads">0</p>
-<p class="text-[10px] font-label-caps text-on-surface-variant">Monthly DLs</p>
-</div>
-</div>
-<div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
-<span class="material-symbols-outlined text-secondary">forum</span>
-<div>
-<p class="text-[20px] font-bold text-white" id="stat-hn">0</p>
-<p class="text-[10px] font-label-caps text-on-surface-variant">HN Mentions (6mo)</p>
-</div>
-</div>
-<div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
-<span class="material-symbols-outlined text-primary-fixed">payments</span>
-<div>
-<p class="text-[20px] font-bold text-white" id="stat-funding">$0</p>
-<p class="text-[10px] font-label-caps text-on-surface-variant">OC Raised</p>
-</div>
-</div>
-<div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
-<span class="material-symbols-outlined text-error">error</span>
-<div>
-<p class="text-[20px] font-bold text-white" id="stat-issues">0</p>
-<p class="text-[10px] font-label-caps text-on-surface-variant">Open Issues</p>
-</div>
-</div>
-</div>
-</div>
-<!-- Funding Pitch & Grid -->
-<div class="grid md:grid-cols-2 gap-8">
-<div class="glass-panel p-6 rounded-xl border-primary-fixed/20 group">
-<div class="flex justify-between items-center mb-4">
-<h3 class="font-label-caps text-primary-fixed uppercase tracking-widest text-[11px]">Funding Pitch</h3>
-<button class="text-on-surface-variant hover:text-white transition-colors" onclick="copyPitch()">
-<span class="material-symbols-outlined text-[18px]">content_copy</span>
-</button>
-</div>
-<p class="font-body-md text-on-surface-variant italic leading-relaxed" id="funding-pitch-text">
-                            ""
-                        </p>
-</div>
-<div class="grid grid-cols-2 gap-4">
-<div class="glass-panel p-6 rounded-xl">
-<h4 class="font-label-caps text-secondary mb-4 text-[11px]">Strengths</h4>
-<ul class="text-on-surface-variant space-y-2 text-[13px]" id="result-strengths">
-</ul>
-</div>
-<div class="glass-panel p-6 rounded-xl">
-<h4 class="font-label-caps text-tertiary-fixed-dim mb-4 text-[11px]">Gaps</h4>
-<ul class="text-on-surface-variant space-y-2 text-[13px]" id="result-gaps">
-</ul>
-</div>
-</div>
-</div>
-<!-- Coral SQL -->
-<details class="glass-panel rounded-xl group transition-all duration-300">
-<summary class="p-6 cursor-pointer flex justify-between items-center font-label-caps text-on-surface-variant hover:text-white select-none text-[12px]">
-                        View Data Query (Coral SQL)
-                        <span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
-</summary>
-<div class="px-6 pb-6 pt-0">
-<div class="bg-surface-container-lowest/50 p-4 rounded-lg border border-white/5">
-<pre class="font-code-sm text-secondary-fixed text-[12px] overflow-x-auto"><code id="result-sql"></code></pre>
-</div>
-</div>
-</details>
-</div>
+
+<main class="flex-grow pt-32 pb-20 px-margin-mobile md:px-margin-desktop max-w-container-max mx-auto w-full">
+<div class="flex flex-col md:flex-row gap-8 items-start justify-center">
+    <!-- Sidebar (Hidden by default, shown when user connects GitHub) -->
+    <aside id="repo-sidebar" class="hidden w-full md:w-64 shrink-0 glass-panel p-6 rounded-xl self-start space-y-4 shadow-xl">
+        <div class="flex justify-between items-center border-b border-white/10 pb-3">
+            <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary-fixed text-[18px]">account_circle</span>
+                <span id="connected-user" class="font-label-caps text-label-caps text-white truncate max-w-[120px]">User</span>
+            </div>
+            <button onclick="disconnectGithub()" class="text-error hover:text-white transition-colors text-[10px] font-label-caps">Disconnect</button>
+        </div>
+        <div class="space-y-2">
+            <h4 class="font-label-caps text-[10px] text-on-surface-variant tracking-wider uppercase">Your Repos</h4>
+            <div id="sidebar-repo-list" class="space-y-1 max-h-[350px] overflow-y-auto pr-2">
+                <p class="text-[11px] text-on-surface-variant/40 italic">No repositories loaded.</p>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Dashboard Column -->
+    <div class="flex-grow max-w-[800px] w-full space-y-12">
+        <!-- Hero Section -->
+        <section class="text-center">
+            <h1 class="font-display-lg text-display-lg md:text-display-lg mb-4 text-white">Impact &amp; Funding Readiness</h1>
+            <p class="font-body-md text-on-surface-variant max-w-2xl mx-auto">Discover the real-world impact of any open-source repository using our advanced coral-graph analysis.</p>
+        </section>
+        
+        <!-- Input Card -->
+        <div class="glass-panel p-2 rounded-xl mb-12 shadow-2xl">
+            <div class="flex flex-col md:flex-row gap-2">
+                <div class="flex-grow flex items-center px-4 py-2">
+                    <span class="material-symbols-outlined text-on-surface-variant mr-3">search</span>
+                    <input class="bg-transparent border-none focus:ring-0 text-white w-full font-code-sm placeholder:text-on-surface-variant/40" id="repo-input" placeholder="owner/repo (e.g. tiangolo/fastapi)" type="text" value="tiangolo/fastapi"/>
+                </div>
+                <div class="md:w-px bg-white/10 h-8 self-center hidden md:block"></div>
+                <select class="bg-transparent border-none focus:ring-0 text-on-surface-variant font-label-caps text-label-caps py-2 px-4 cursor-pointer" id="ecosystem-select">
+                    <option value="python">Python / PyPI</option>
+                    <option value="npm">JavaScript / npm</option>
+                    <option value="other">Other</option>
+                </select>
+                <button class="bg-primary-fixed text-on-primary-fixed px-8 py-3 rounded-lg font-label-caps text-label-caps primary-glow transition-all flex items-center justify-center gap-2" id="analyze-btn" onclick="analyze()">
+                                    Analyze <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Results Area -->
+        <div class="relative min-h-[400px]" id="results-container">
+            <!-- Placeholder State -->
+            <div class="flex flex-col items-center justify-center py-20 text-on-surface-variant/30" id="waiting-state">
+                <span class="material-symbols-outlined text-[64px] mb-4">analytics</span>
+                <p class="font-label-caps">Waiting for input...</p>
+            </div>
+            <!-- Loading State (Hidden) -->
+            <div class="hidden flex flex-col items-center justify-center py-20" id="loading-state">
+                <div class="w-12 h-12 border-4 border-primary-fixed/20 border-t-primary-fixed rounded-full animate-spin mb-4"></div>
+                <p class="font-label-caps text-primary-fixed animate-pulse">Analyzing Repository Data...</p>
+            </div>
+            <!-- Impact Card (Hidden by Default) -->
+            <div class="hidden reveal-anim space-y-8" id="impact-card">
+                <div class="glass-panel p-8 rounded-xl relative overflow-hidden">
+                    <div class="absolute top-0 right-0 w-64 h-64 bg-primary-fixed/5 rounded-full blur-3xl -mr-32 -mt-32"></div>
+                    <div class="flex flex-col md:flex-row justify-between items-start gap-8 relative z-10">
+                        <div class="space-y-6 flex-grow">
+                            <div class="flex items-center gap-4">
+                                <span id="verdict-badge" class="bg-primary-fixed/10 text-primary-fixed px-4 py-1 rounded-full text-label-caps font-label-caps border border-primary-fixed/20 shadow-[0_0_15px_rgba(127,255,110,0.2)]">Thriving</span>
+                                <h2 class="font-headline-md text-headline-md text-white" id="result-repo-name">tiangolo / fastapi</h2>
+                            </div>
+                            <p class="text-on-surface-variant font-body-md leading-relaxed" id="result-repo-desc"></p>
+                            <p class="text-on-surface-variant font-body-md leading-relaxed" id="result-narrative"></p>
+                            <div class="flex flex-wrap gap-2 animate-fade-in" id="result-grants-container">
+                            </div>
+                        </div>
+                        <div class="relative w-32 h-32 flex items-center justify-center shrink-0">
+                            <svg class="w-full h-full transform -rotate-90">
+                                <circle class="text-white/5" cx="64" cy="64" fill="transparent" r="58" stroke="currentColor" stroke-width="8"></circle>
+                                <circle class="text-primary-fixed" cx="64" cy="64" fill="transparent" id="score-ring" r="58" stroke="currentColor" stroke-dasharray="364.4" stroke-dashoffset="364.4" stroke-width="8"></circle>
+                            </svg>
+                            <div class="absolute inset-0 flex flex-col items-center justify-center">
+                                <span class="text-3xl font-bold text-white" id="result-score-num">95</span>
+                                <span class="text-[10px] font-label-caps opacity-50">SCORE</span>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Stats Grid -->
+                    <div class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-12">
+                        <div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
+                            <span class="material-symbols-outlined text-primary-fixed">star</span>
+                            <div>
+                                <p class="text-[20px] font-bold text-white" id="stat-stars">0</p>
+                                <p class="text-[10px] font-label-caps text-on-surface-variant">GitHub Stars</p>
+                            </div>
+                        </div>
+                        <div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
+                            <span class="material-symbols-outlined text-secondary">fork_right</span>
+                            <div>
+                                <p class="text-[20px] font-bold text-white" id="stat-forks">0</p>
+                                <p class="text-[10px] font-label-caps text-on-surface-variant">Forks</p>
+                            </div>
+                        </div>
+                        <div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
+                            <span class="material-symbols-outlined text-tertiary-fixed-dim">download</span>
+                            <div>
+                                <p class="text-[20px] font-bold text-white" id="stat-downloads">0</p>
+                                <p class="text-[10px] font-label-caps text-on-surface-variant">Monthly DLs</p>
+                            </div>
+                        </div>
+                        <div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
+                            <span class="material-symbols-outlined text-secondary">forum</span>
+                            <div>
+                                <p class="text-[20px] font-bold text-white" id="stat-hn">0</p>
+                                <p class="text-[10px] font-label-caps text-on-surface-variant">HN Mentions (6mo)</p>
+                            </div>
+                        </div>
+                        <div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
+                            <span class="material-symbols-outlined text-primary-fixed">payments</span>
+                            <div>
+                                <p class="text-[20px] font-bold text-white" id="stat-funding">$0</p>
+                                <p class="text-[10px] font-label-caps text-on-surface-variant">OC Raised</p>
+                            </div>
+                        </div>
+                        <div class="glass-panel-elevated p-4 rounded-lg flex items-center gap-4 stats-grid-item">
+                            <span class="material-symbols-outlined text-error">error</span>
+                            <div>
+                                <p class="text-[20px] font-bold text-white" id="stat-issues">0</p>
+                                <p class="text-[10px] font-label-caps text-on-surface-variant">Open Issues</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Funding Pitch & Grid -->
+                <div class="grid md:grid-cols-2 gap-8">
+                    <div class="glass-panel p-6 rounded-xl border-primary-fixed/20 group">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-label-caps text-primary-fixed uppercase tracking-widest text-[11px]">Funding Pitch</h3>
+                            <button class="text-on-surface-variant hover:text-white transition-colors" onclick="copyPitch()">
+                                <span class="material-symbols-outlined text-[18px]">content_copy</span>
+                            </button>
+                        </div>
+                        <p class="font-body-md text-on-surface-variant italic leading-relaxed" id="funding-pitch-text">
+                                                    ""
+                                                </p>
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="glass-panel p-6 rounded-xl">
+                            <h4 class="font-label-caps text-secondary mb-4 text-[11px]">Strengths</h4>
+                            <ul class="text-on-surface-variant space-y-2 text-[13px]" id="result-strengths">
+                            </ul>
+                        </div>
+                        <div class="glass-panel p-6 rounded-xl">
+                            <h4 class="font-label-caps text-tertiary-fixed-dim mb-4 text-[11px]">Gaps</h4>
+                            <ul class="text-on-surface-variant space-y-2 text-[13px]" id="result-gaps">
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <!-- Coral SQL -->
+                <details class="glass-panel rounded-xl group transition-all duration-300">
+                    <summary class="p-6 cursor-pointer flex justify-between items-center font-label-caps text-on-surface-variant hover:text-white select-none text-[12px]">
+                                            View Data Query (Coral SQL)
+                                            <span class="material-symbols-outlined transition-transform group-open:rotate-180">expand_more</span>
+                    </summary>
+                    <div class="px-6 pb-6 pt-0">
+                        <div class="bg-surface-container-lowest/50 p-4 rounded-lg border border-white/5">
+                            <pre class="font-code-sm text-secondary-fixed text-[12px] overflow-x-auto"><code id="result-sql"></code></pre>
+                        </div>
+                    </div>
+                </details>
+            </div>
+        </div>
+    </div>
 </div>
 </main>
+
+<!-- Connect GitHub Modal -->
+<div id="github-modal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm">
+    <div class="glass-panel-elevated p-8 rounded-xl max-w-md w-full mx-4 space-y-6 shadow-2xl relative border border-white/10">
+        <button class="absolute top-4 right-4 text-on-surface-variant hover:text-white transition-colors" onclick="toggleGithubModal(false)">
+            <span class="material-symbols-outlined">close</span>
+        </button>
+        <div class="space-y-2">
+            <h3 class="font-headline-md text-headline-md text-white">Connect GitHub</h3>
+            <p class="text-on-surface-variant text-[13px] leading-relaxed">
+                Enter your GitHub Username (to fetch your public repositories) or a Personal Access Token (PAT) to also browse private ones.
+            </p>
+        </div>
+        <div class="space-y-4">
+            <div class="flex flex-col gap-2">
+                <label class="font-label-caps text-label-caps opacity-50 text-[10px]" for="gh-username">Username</label>
+                <input class="bg-surface-container-lowest/50 border border-white/10 focus:border-primary-fixed focus:ring-0 text-white rounded p-3 font-code-sm outline-none" id="gh-username" placeholder="e.g. himanshu748" type="text"/>
+            </div>
+            <div class="flex flex-col gap-2">
+                <label class="font-label-caps text-label-caps opacity-50 text-[10px]" for="gh-token">Token (Optional)</label>
+                <input class="bg-surface-container-lowest/50 border border-white/10 focus:border-primary-fixed focus:ring-0 text-white rounded p-3 font-code-sm outline-none" id="gh-token" placeholder="ghp_..." type="password"/>
+            </div>
+        </div>
+        <div class="flex gap-4 pt-2">
+            <button class="flex-1 bg-white/5 border border-white/10 hover:bg-white/10 text-white py-3 rounded font-label-caps text-label-caps transition-all" onclick="toggleGithubModal(false)">
+                Cancel
+            </button>
+            <button class="flex-grow bg-primary-fixed text-on-primary-fixed py-3 rounded font-label-caps text-label-caps primary-glow transition-all" id="fetch-repos-btn" onclick="connectGithub()">
+                Connect
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- Footer -->
 <footer class="w-full py-8 px-margin-desktop flex flex-col md:flex-row justify-between items-center gap-gutter bg-surface-container-lowest/50 dark:bg-surface-container-lowest/50 backdrop-blur-md border-t border-white/5">
 <div class="font-display-lg text-[20px] text-primary">RepoRank</div>
@@ -328,7 +387,134 @@
 </div>
 </div>
 </footer>
+
 <script>
+        // Restoring GitHub Session
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedUser = localStorage.getItem('gh_username');
+            const savedToken = localStorage.getItem('gh_token');
+            if (savedUser) {
+                document.getElementById('gh-username').value = savedUser;
+                if (savedToken) document.getElementById('gh-token').value = savedToken;
+                loadGithubSidebar(savedUser, savedToken);
+            }
+        });
+
+        function toggleGithubModal(show) {
+            const modal = document.getElementById('github-modal');
+            if (show) {
+                modal.classList.remove('hidden');
+            } else {
+                modal.classList.add('hidden');
+            }
+        }
+
+        async function connectGithub() {
+            const username = document.getElementById('gh-username').value.trim();
+            const token = document.getElementById('gh-token').value.trim();
+
+            if (!username) {
+                alert('Please enter a GitHub username');
+                return;
+            }
+
+            const btn = document.getElementById('fetch-repos-btn');
+            btn.disabled = true;
+            btn.textContent = 'Connecting...';
+
+            const success = await loadGithubSidebar(username, token);
+            btn.disabled = false;
+            btn.textContent = 'Connect';
+
+            if (success) {
+                localStorage.setItem('gh_username', username);
+                if (token) {
+                    localStorage.setItem('gh_token', token);
+                } else {
+                    localStorage.removeItem('gh_token');
+                }
+                toggleGithubModal(false);
+            }
+        }
+
+        function disconnectGithub() {
+            localStorage.removeItem('gh_username');
+            localStorage.removeItem('gh_token');
+            document.getElementById('gh-username').value = '';
+            document.getElementById('gh-token').value = '';
+            document.getElementById('repo-sidebar').classList.add('hidden');
+            
+            // Reset navbar button
+            const connBtn = document.querySelector('header button');
+            connBtn.textContent = 'Connect GitHub';
+            connBtn.onclick = () => toggleGithubModal(true);
+        }
+
+        async function loadGithubSidebar(username, token) {
+            const sidebar = document.getElementById('repo-sidebar');
+            const listContainer = document.getElementById('sidebar-repo-list');
+            const connectedUser = document.getElementById('connected-user');
+
+            listContainer.innerHTML = '<div class="flex items-center justify-center py-6"><div class="w-5 h-5 border-2 border-primary-fixed/20 border-t-primary-fixed rounded-full animate-spin"></div></div>';
+            sidebar.classList.remove('hidden');
+
+            // Update navbar button
+            const connBtn = document.querySelector('header button');
+            connBtn.textContent = 'Disconnect';
+            connBtn.onclick = disconnectGithub;
+
+            try {
+                let url = `https://api.github.com/users/${username}/repos?sort=updated&per_page=30`;
+                const headers = { 'Accept': 'application/vnd.github.v3+json' };
+                if (token) {
+                    url = `https://api.github.com/user/repos?sort=updated&per_page=30`;
+                    headers['Authorization'] = `token ${token}`;
+                }
+
+                const resp = await fetch(url, { headers });
+                if (!resp.ok) {
+                    throw new Error(`GitHub API returned status ${resp.status}`);
+                }
+
+                const repos = await resp.json();
+                connectedUser.textContent = username;
+                listContainer.innerHTML = '';
+
+                if (!repos.length) {
+                    listContainer.innerHTML = '<p class="text-[11px] text-on-surface-variant/40 italic py-2">No repositories found.</p>';
+                    return true;
+                }
+
+                repos.forEach(repo => {
+                    const item = document.createElement('button');
+                    item.className = 'w-full text-left px-3 py-2 rounded text-[11px] font-code-sm text-on-surface-variant hover:text-white hover:bg-white/5 transition-all truncate border border-transparent hover:border-white/5 outline-none';
+                    item.textContent = repo.name;
+                    item.title = repo.full_name;
+                    item.onclick = () => {
+                        document.getElementById('repo-input').value = repo.full_name;
+                        // Auto-select ecosystem based on repo language
+                        const lang = (repo.language || '').toLowerCase();
+                        const ecoSelect = document.getElementById('ecosystem-select');
+                        if (lang === 'python') {
+                            ecoSelect.value = 'python';
+                        } else if (['javascript', 'typescript'].includes(lang)) {
+                            ecoSelect.value = 'npm';
+                        } else {
+                            ecoSelect.value = 'other';
+                        }
+                        analyze();
+                    };
+                    listContainer.appendChild(item);
+                });
+
+                return true;
+            } catch (err) {
+                alert(`Failed to load GitHub repositories: ${err.message}`);
+                disconnectGithub();
+                return false;
+            }
+        }
+
         function verdictClass(v) {
             const map = {
                 'thriving':       'bg-primary-fixed/10 text-primary-fixed border-primary-fixed/20 shadow-[0_0_15px_rgba(127, 255, 110, 0.2)]',
@@ -450,15 +636,35 @@ WHERE   g.owner = '${owner}' AND g.repo = '${pkg_name}'`;
                     scoreRing.className.baseVal = 'text-error';
                 }
 
-                // Grants
+                // Grants with URLs
                 const grantsContainer = document.getElementById('result-grants-container');
                 grantsContainer.innerHTML = '';
                 if (grants.length) {
                     grants.forEach(grant => {
-                        const span = document.createElement('span');
-                        span.className = 'bg-white/5 px-3 py-1 rounded text-[11px] font-label-caps text-secondary border border-white/5';
-                        span.textContent = grant;
-                        grantsContainer.appendChild(span);
+                        const savedLinks = {
+                            'github sponsors': 'https://github.com/sponsors',
+                            'open source collective': 'https://osc.opencollective.com/',
+                            'opencollective': 'https://opencollective.com/',
+                            'tidelift': 'https://tidelift.com/lifter',
+                            'psf grants': 'https://www.python.org/psf/grants/',
+                            'python software foundation': 'https://www.python.org/psf/grants/',
+                            'python software foundation grants': 'https://www.python.org/psf/grants/',
+                            'numfocus': 'https://numfocus.org/programs/affiliated-projects',
+                            'linux foundation': 'https://www.linuxfoundation.org/',
+                            'openssf': 'https://openssf.org/',
+                            'google summer of code': 'https://summerofcode.withgoogle.com/',
+                            'gsoc': 'https://summerofcode.withgoogle.com/',
+                            'outreachy': 'https://www.outreachy.org/',
+                            'open collective': 'https://opencollective.com/'
+                        };
+                        const url = savedLinks[grant.toLowerCase()] || ('https://www.google.com/search?q=' + encodeURIComponent(grant));
+                        
+                        const anchor = document.createElement('a');
+                        anchor.href = url;
+                        anchor.target = '_blank';
+                        anchor.className = 'bg-white/5 px-3 py-1 rounded text-[11px] font-label-caps text-secondary border border-white/5 hover:border-secondary hover:text-white hover:bg-white/10 transition-all flex items-center gap-1';
+                        anchor.innerHTML = `${grant} <span class="material-symbols-outlined text-[10px]">open_in_new</span>`;
+                        grantsContainer.appendChild(anchor);
                     });
                     grantsContainer.classList.remove('hidden');
                 } else {
