@@ -126,9 +126,10 @@ Coral didn't have native support for all the data sources we needed, so we **des
 | **PyPI** | REST | Package download stats, versions | [PR #827](https://github.com/withcoral/coral/pull/827) |
 | **npm** | REST | Weekly/monthly downloads | [PR #828](https://github.com/withcoral/coral/pull/828) |
 | **Open Collective** | GraphQL | Total raised, contributor count | [PR #829](https://github.com/withcoral/coral/pull/829) |
+| **Qdrant** | REST | Collection stats and cluster metrics | [PR #757](https://github.com/withcoral/coral/pull/757) |
 | **HackerNews** | REST (Algolia) | Story mentions, scores, timestamps | Local spec |
 
-All 3 upstream PRs have been submitted to [`withcoral/coral`](https://github.com/withcoral/coral/pulls).
+All 4 upstream PRs have been submitted to [`withcoral/coral`](https://github.com/withcoral/coral/pulls).
 
 ---
 
