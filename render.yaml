@@ -11,5 +11,7 @@ services:
     envVars:
       - key: PORT
         value: 8000
+      - key: PYTHON_VERSION
+        value: 3.11
       - key: HF_TOKEN
         sync: false # Set your Hugging Face API key in the Render dashboard
