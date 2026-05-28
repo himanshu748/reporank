@@ -4,7 +4,7 @@ set -e
 echo "=== Starting Application ==="
 
 # Prepend Coral bin to PATH
-export PATH=$PATH:$HOME/.local/bin
+export PATH=$PATH:$(pwd)/bin
 
 # Print version to confirm installation
 echo "Coral CLI Version:"
