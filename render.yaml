@@ -4,6 +4,7 @@
 services:
   - type: web
     name: reporank
+    plan: free
     runtime: python
     buildCommand: pip install -r requirements.txt
     startCommand: python main.py
