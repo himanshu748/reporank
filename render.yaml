@@ -6,8 +6,8 @@ services:
     name: reporank
     plan: free
     runtime: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: python main.py
+    buildCommand: ./build.sh
+    startCommand: ./start.sh
     envVars:
       - key: PORT
         value: 8000
