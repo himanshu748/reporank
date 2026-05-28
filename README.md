@@ -1,4 +1,4 @@
-<![CDATA[<div align="center">
+<div align="center">
 
 # ☠️ RepoRank
 
@@ -244,4 +244,3 @@ railway init && railway up
 *Pirates of the Coral-bean 🏴‍☠️*
 
 </div>
-]]>
