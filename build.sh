@@ -11,6 +11,7 @@ pip install -r requirements.txt
 echo "Downloading and installing Coral CLI..."
 mkdir -p bin
 export CORAL_INSTALL_DIR=$(pwd)/bin
+export CORAL_VERSION=v0.4.0
 curl -fsSL https://withcoral.com/install.sh | sh
 
 echo "=== Build Complete ==="
