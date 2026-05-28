@@ -20,4 +20,4 @@ coral source add --file sources/opencollective.yaml || true
 
 # Start FastAPI
 echo "Starting FastAPI Server..."
-python main.py
+python3 main.py
