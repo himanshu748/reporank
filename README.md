@@ -18,6 +18,18 @@ Built for **Pirates of the Coral-bean** hackathon by [WeMakeDevs](https://wemake
 
 ---
 
+## 🏴‍☠️ Hackathon Submission
+
+RepoRank was submitted to the **Pirates of the Coral-bean** hackathon for **Track 1, Track 2, and the Special Bounties Track**.
+
+- **Live app:** https://reporank.onrender.com
+- **Demo video:** https://youtu.be/FbTA-XBdXL8
+- **GitHub repo:** https://github.com/himanshu748/reporank
+- **X / social post:** https://x.com/i/status/2060418945619034621
+- **Core Coral evidence:** cross-source joins + custom community source specs + upstream PRs for PyPI, npm, Open Collective, and Qdrant
+
+---
+
 ## 📸 Dashboard Preview
 
 <div align="center">
@@ -178,7 +190,7 @@ python main.py
 
 ## 📁 Project Structure
 
-```
+```text
 reporank/
 ├── main.py                  # FastAPI app — serves UI + /analyze endpoint
 ├── agent/
@@ -220,9 +232,10 @@ reporank/
 - [x] YouTube demo (3 min max)
 - [x] GitHub repo public
 - [x] Deployed link
-- [ ] Discord showcase in #show-and-tell
-- [ ] LinkedIn/X post tagging @withcoral & @WeMakeDevs
+- [x] X/social post live
 - [x] Captain's Log blog post
+- [x] Submitted for Track 1, Track 2, and Special Bounties Track
+- [ ] Discord showcase in #show-and-tell
 
 ---
 
