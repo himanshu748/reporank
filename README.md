@@ -235,7 +235,7 @@ reporank/
 - [x] X/social post live
 - [x] Captain's Log blog post
 - [x] Submitted for Track 1, Track 2, and Special Bounties Track
-- [ ] Discord showcase in #show-and-tell
+- [x] Discord showcase in #show-and-tell
 
 ---
 
